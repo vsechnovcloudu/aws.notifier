@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "sender" {
-  depends_on  = ["aws_lambda_function.sender"]
+  depends_on  = ["aws_lambda_function.emailsender"]
   name        = "SenderAPI-${terraform.workspace}"
   description = "The way of sending emails from our website!"
 }
