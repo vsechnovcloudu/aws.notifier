@@ -18,7 +18,7 @@ exports.handler = (event, context, callback) => {
 };
 
 function sendEmail (event, done) {
-
+    var data = JSON.parse(event.body);
     var params = {
         Destination: {
             ToAddresses: RECEIVERS
@@ -26,12 +26,12 @@ function sendEmail (event, done) {
         Message: {
             Body: {
                 Text: {
-                    Data: 'Name: TEST' + '\nEmail: test@example.com' + '\nMessage: test message',
+                    Data: 'Name: ' + data.name + '\nEmail: ' + data.email + '\nMessage: ' + data.message,
                     Charset: 'UTF-8'
                 }
             },
             Subject: {
-                Data: 'Contact Form inquiry: TEST',
+                Data: 'Contact Form inquiry: ' + data.name,
                 Charset: 'UTF-8'
             }
         },
