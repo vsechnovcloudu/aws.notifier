@@ -20,3 +20,12 @@ resource "aws_lambda_function" "emailsender" {
     Description = "Simple Email Sender"
   }
 }
+
+resource "aws_lambda_permission" "allow-apigw" {
+  depends_on     = ["aws_api_gateway_method.senderpost"]
+  statement_id   = "AllowExecutionFromAPIGW"
+  action         = "lambda:InvokeFunction"
+  function_name  = "${aws_lambda_function.emailsender.function_name}"
+  principal      = "apigateway.amazonaws.com"
+  source_arn     = "arn:aws:execute-api:${var.REGION}:${var.aws_account_id}:${aws_api_gateway_rest_api.sender.id}/*/${aws_api_gateway_method.senderpost.http_method}/"
+}
