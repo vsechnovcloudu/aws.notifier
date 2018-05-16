@@ -70,7 +70,8 @@ jobs:
               if (terraform workspace list | grep ${CIRCLE_BRANCH}); then terraform workspace select ${CIRCLE_BRANCH}; else terraform workspace new ${CIRCLE_BRANCH}; fi
               terraform plan -var-file=vars/${CIRCLE_BRANCH}.tfvars -input=false
               terraform apply -var-file=vars/${CIRCLE_BRANCH}.tfvars -auto-approve
-              #curl -X POST --data-urlencode "payload={\"channel\": \"#dev-buy_in_agent\", \"username\": \"BIA endpoints:\", \"text\": \" Evironment: $CIRCLE_BRANCH \n <http://$WWWURL|Frontend> \n API: $APIENDPOINT \", \"icon_emoji\": \":calling:\"}" https://hooks.slack.com/services/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
+              export APIENDPOINT=$(terraform show -no-color | grep 'api-sender-endpoint' | awk '{print $3}')
+              curl -X POST --data-urlencode "payload={\"channel\": \"#aws_notifier_pipeline\", \"username\": \"confirmer:\", \"text\": \" Evironment: $CIRCLE_BRANCH \n API: $APIENDPOINT \", \"icon_emoji\": \":thumbsup:\"}" https://hooks.slack.com/services/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
 
 workflows:
   version: 2
