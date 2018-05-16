@@ -1,0 +1,2 @@
+variable "SENDER" {}
+variable "RECEIVER" {}
