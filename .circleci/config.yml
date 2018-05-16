@@ -38,7 +38,7 @@ jobs:
       - deploy:
           name: Upload artifact to S3
           command: |
-            aws s3 sync . s3://vvc.aws.notifier.operations --exclude "*" --include "sender-${CIRCLE_BRANCH}.zip"
+            aws s3 sync . s3://vvc.aws.notifier.ops --exclude "*" --include "sender-${CIRCLE_BRANCH}.zip"
 
   deploy_infra:
       docker:
@@ -61,7 +61,7 @@ jobs:
         - run:
             name: Get all artifacts from S3
             command: |
-                aws s3 sync s3://vvc.aws.notifier.operations ./terraform --exclude "*" --include "*-${CIRCLE_BRANCH}.zip"
+                aws s3 sync s3://vvc.aws.notifier.ops ./terraform --exclude "*" --include "*-${CIRCLE_BRANCH}.zip"
         - deploy:
             name: Terraform INIT, PLAN and APPLY or DESTROY
             working_directory: ~/aws.notifier/terraform
