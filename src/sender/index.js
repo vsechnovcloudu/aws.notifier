@@ -18,7 +18,7 @@ exports.handler = (event, context, callback) => {
 };
 
 function sendEmail (event, done) {
-    var data = event.body;
+
     var params = {
         Destination: {
             ToAddresses: RECEIVERS
@@ -26,12 +26,12 @@ function sendEmail (event, done) {
         Message: {
             Body: {
                 Text: {
-                    Data: 'Name: ' + data.name + '\nEmail: ' + data.email + '\nMessage: ' + data.message,
+                    Data: 'Name: ' + event.name + '\nEmail: ' + event.email + '\nMessage: ' + event.message,
                     Charset: 'UTF-8'
                 }
             },
             Subject: {
-                Data: 'Contact Form inquiry: ' + data.name,
+                Data: 'Contact Form inquiry: ' + event.name,
                 Charset: 'UTF-8'
             }
         },
