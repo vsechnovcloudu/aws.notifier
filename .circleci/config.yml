@@ -1,0 +1,82 @@
+# https://circleci.com/docs/2.0
+
+version: 2
+jobs:
+
+  build_sender:
+    working_directory: ~/aws.notifier/src/sender
+    docker:
+      - image: circleci/node:8.10
+    steps:
+      - checkout:
+          path: ~/aws.notifier
+      - restore_cache:
+          keys:
+          - sender-modules-{{ checksum "package.json" }}
+          - sender-modules-
+      - run:
+          name: Install modules
+          command: npm install
+      - run:
+          name: Run tests
+          command: npm test
+      - save_cache:
+          key: sender-modules-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Zipping for Lambda deployment
+          command:
+            zip -r sender-${CIRCLE_BRANCH}.zip *
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get install python-dev
+            sudo curl -O https://bootstrap.pypa.io/get-pip.py
+            sudo python get-pip.py
+            sudo pip install awscli --upgrade
+      - deploy:
+          name: Upload artifact to S3
+          command: |
+            aws s3 sync . s3://vvc.aws.notifier.operations --exclude "*" --include "sender-${CIRCLE_BRANCH}.zip"
+
+  deploy_infra:
+      docker:
+        - image: circleci/node:8.10
+      working_directory: ~/aws.notifier/
+      steps:
+        - checkout
+        - run:
+            name: Install Terraform
+            command: |
+              sudo wget -O terraform.zip https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
+              sudo unzip terraform.zip -d /usr/local/bin
+        - run:
+            name: Install AWS CLI
+            command: |
+              sudo apt-get install python-dev
+              sudo curl -O https://bootstrap.pypa.io/get-pip.py
+              sudo python get-pip.py
+              sudo pip install awscli --upgrade
+        - run:
+            name: Get all artifacts from S3
+            command: |
+                aws s3 sync s3://vvc.aws.notifier.operations ./terraform --exclude "*" --include "*-${CIRCLE_BRANCH}.zip"
+        - deploy:
+            name: Terraform INIT, PLAN and APPLY or DESTROY
+            working_directory: ~/bia/terraform
+            command: |
+              terraform init -input=false
+              if (terraform workspace list | grep ${CIRCLE_BRANCH}); then terraform workspace select ${CIRCLE_BRANCH}; else terraform workspace new ${CIRCLE_BRANCH}; fi
+              terraform plan -input=false
+              #terraform apply -auto-approve
+              #curl -X POST --data-urlencode "payload={\"channel\": \"#dev-buy_in_agent\", \"username\": \"BIA endpoints:\", \"text\": \" Evironment: $CIRCLE_BRANCH \n <http://$WWWURL|Frontend> \n API: $APIENDPOINT \", \"icon_emoji\": \":calling:\"}" https://hooks.slack.com/services/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
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - build_sender
+      - deploy_infra:
+          requires:
+            - build_sender
