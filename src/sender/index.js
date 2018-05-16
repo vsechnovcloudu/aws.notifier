@@ -18,7 +18,7 @@ exports.handler = (event, context, callback) => {
 };
 
 function sendEmail (event, done) {
-    var data = JSON.parse(event.body);
+    var data = event.body;
     var params = {
         Destination: {
             ToAddresses: RECEIVERS
