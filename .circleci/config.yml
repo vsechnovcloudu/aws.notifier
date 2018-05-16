@@ -64,7 +64,7 @@ jobs:
                 aws s3 sync s3://vvc.aws.notifier.operations ./terraform --exclude "*" --include "*-${CIRCLE_BRANCH}.zip"
         - deploy:
             name: Terraform INIT, PLAN and APPLY or DESTROY
-            working_directory: ~/bia/terraform
+            working_directory: ~/aws.notifier/terraform
             command: |
               terraform init -var-file=vars/${CIRCLE_BRANCH}.tfvars -input=false
               if (terraform workspace list | grep ${CIRCLE_BRANCH}); then terraform workspace select ${CIRCLE_BRANCH}; else terraform workspace new ${CIRCLE_BRANCH}; fi
