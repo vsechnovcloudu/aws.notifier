@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "emailsender" {
-  //depends_on       = ["aws_iam_role.bia_buy_lambda"]
+  depends_on       = ["aws_iam_role.sender_lambda"]
   function_name    = "sender-${terraform.workspace}"
-  role             = "arn:aws:iam::104324328386:role/emailtestrole"
+  role             = "${aws_iam_role.sender_lambda.arn}"
   handler          = "index.handler"
   filename         = "sender-${terraform.workspace}.zip"
   //source_code_hash = "${base64sha256(file(${aws_lambda_function.buyorder.filename}))}"
