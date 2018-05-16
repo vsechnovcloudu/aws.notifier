@@ -58,3 +58,14 @@ resource "aws_api_gateway_integration_response" "senderpost" {
     "method.response.header.Access-Control-Allow-Origin" = "'${var.origin}'"
   }
 }
+
+resource "aws_api_gateway_deployment" "sender" {
+  depends_on = ["aws_api_gateway_integration.senderpost"]
+  rest_api_id = "${aws_api_gateway_rest_api.sender.id}"
+  stage_name = "${var.APISTAGE}"
+  stage_description = "Latest"
+  //stage_description = "Deployed at ${timestamp()}"
+  lifecycle {
+    create_before_destroy = true
+  }
+}
