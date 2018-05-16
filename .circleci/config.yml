@@ -16,10 +16,10 @@ jobs:
           - sender-modules-
       - run:
           name: Install modules
-          command: npm install
+          command: yarn install
       - run:
           name: Run tests
-          command: npm test
+          command: yarn test
       - save_cache:
           key: sender-modules-{{ checksum "package.json" }}
           paths:
