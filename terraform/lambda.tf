@@ -14,6 +14,7 @@ resource "aws_lambda_function" "emailsender" {
     variables = {
       sender = "${var.SENDER}"
       receiver = "${var.RECEIVER}"
+      origin = "${var.ORIGIN}"
     }
   }
 
