@@ -1,6 +1,6 @@
 SENDER = "notifikator@vsechnovcloudu.cz"
 RECEIVER = "info@vsechnovcloudu.cz"
 aws_account_id = "683981514902"
-origin = "*"
+origin = "example.com"
 REGION = "eu-west-1"
 APISTAGE = "test"
