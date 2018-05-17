@@ -55,7 +55,7 @@ resource "aws_api_gateway_integration_response" "senderpost" {
   }
 
   response_parameters {
-    "method.response.header.Access-Control-Allow-Origin" = "'${var.origin}'"
+    "method.response.header.Access-Control-Allow-Origin" = "'${var.ORIGIN}'"
   }
 }
 
@@ -89,7 +89,7 @@ resource "aws_api_gateway_integration_response" "cors-sender" {
   response_parameters {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
     "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'${var.origin}'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'${var.ORIGIN}'"
   }
 }
 
