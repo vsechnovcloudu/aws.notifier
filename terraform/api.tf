@@ -114,7 +114,7 @@ resource "aws_api_gateway_deployment" "sender" {
   rest_api_id = "${aws_api_gateway_rest_api.sender.id}"
   stage_name = "${var.APISTAGE}"
   stage_description = "Latest"
-  //stage_description = "Deployed at ${timestamp()}"
+  stage_description = "Deployed at ${timestamp()}"
   lifecycle {
     create_before_destroy = true
   }
