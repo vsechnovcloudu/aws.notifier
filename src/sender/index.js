@@ -3,13 +3,14 @@ var ses = new AWS.SES()
 
 var RECEIVERS = [process.env.receiver];
 var SENDER = process.env.sender; // make sure that the sender email is properly set up in your Amazon SES
+var ORIGIN = process.env.origin;
 
 exports.handler = (event, context, callback) => {
     console.log('Received event:', event);
     sendEmail(event, function (err, data) {
         var response = {
             "isBase64Encoded": false,
-            "headers": { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'http://example.com' },
+            "headers": { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': ORIGIN },
             "statusCode": 200,
             "body": "{\"result\": \"Success.\"}"
         };
